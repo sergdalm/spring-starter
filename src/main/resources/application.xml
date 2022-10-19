@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                            http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.springframework.org/schema/context
+                            http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+    <context:property-placeholder location="classpath:application.properties"/>
+    <context:annotation-config/>
+
+    <bean class="com.dmdev.spring.bpp.InjectBeanPostProcessor"/>
+<!--    <bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor"/>-->
+
+    <!--    <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">-->
+    <!--        <property name="locations" value="classpath:application.properties"></property>-->
+    <!--    </bean>-->
+    <bean class="com.dmdev.spring.bfpp.LogBeanFactoryPotProcessor"/>
+    <bean class="com.dmdev.spring.bfpp.VerifyPropertyBeanFactoryPostProcessor"/>
+
+    <bean id="driver" class="java.lang.String">
+        <constructor-arg type="java.lang.String" value="${db.driver}"/>
+    </bean>
+    <bean id="pool1" name="p1,p2,p3" class="com.dmdev.spring.database.pool.ConnectionPool">
+        <!--        Если у класса есть несколько конструкторов с одним параметром, то мы должны указать явно тип чтобы Спринг понял какой конструктор использовать-->
+        <constructor-arg name="username" type="java.lang.String" value="${db.username}"/>
+        <constructor-arg name="poolSize" type="java.lang.Integer" value="${db.pool.size}"/>
+        <constructor-arg name="args" type="java.util.List">
+            <list>
+                <value>--arg1=value1</value>
+                <value>--arg2=value2</value>
+                <ref bean="driver"/>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="properties" type="java.util.Map">
+            <null/>
+        </constructor-arg>
+        <property name="properties">
+            <map>
+                <entry key="url" value="postgresurl"/>
+                <entry key="password" value="123"/>
+                <entry key="test" value="123"/>
+                <entry key="driver" value="#{driver.substring(3)}"/>
+                <entry key="test" value="#{driver.length() > 10}"/>
+                <entry key="test1" value="#{driver.length() > T(Math).random() * 10}"/>
+                <entry key="hosts" value="#{'${db.hosts}'.split(',')}"/>
+                <entry key="currentUser" value="#{systemProperties['user.name']}"/>
+                <entry key="currentUser1" value="${user.name}"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="companyRepository" class="com.dmdev.spring.database.repositery.CompanyRepository"/>
+    <!--    <bean id="pool2" name="p4" class="com.dmdev.spring.database.pool.ConnectionPool"/>-->
+</beans>
