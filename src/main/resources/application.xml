@@ -10,6 +10,7 @@
     <context:annotation-config/>
 
     <bean class="com.dmdev.spring.bpp.InjectBeanPostProcessor"/>
+    <bean class="com.dmdev.spring.bpp.TransactionBeanPostProcessor"/>
 <!--    <bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor"/>-->
 
     <!--    <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">-->
