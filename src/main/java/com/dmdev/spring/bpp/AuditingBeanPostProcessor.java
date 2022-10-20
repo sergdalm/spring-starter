@@ -9,30 +9,31 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class TransactionBeanPostProcessor implements BeanPostProcessor {
+public class AuditingBeanPostProcessor implements BeanPostProcessor {
 
-    private final Map<String, Class<?>> transactionBeans = new HashMap<>();
+    private final Map<String, Class<?>> auditBeans = new HashMap<>();
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        if (bean.getClass().isAnnotationPresent(Transaction.class)) {
-            transactionBeans.put(beanName, bean.getClass());
+        if (bean.getClass().isAnnotationPresent(Auditing.class)) {
+            auditBeans.put(beanName, bean.getClass());
         }
         return bean;
     }
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        Class<?> beanClass = transactionBeans.get(beanName);
+        Class<?> beanClass = auditBeans.get(beanName);
         if (beanClass != null) {
             return Proxy.newProxyInstance(beanClass.getClassLoader(),
                     beanClass.getInterfaces(),
                     (proxy, method, args) -> {
-                        System.out.println("Open transaction");
+                        System.out.println("Audit method: " + method.getName());
+                        long startTime = System.nanoTime();
                         try {
                             return method.invoke(bean, args);
                         } finally {
-                            System.out.println("close transaction");
+                            System.out.println("Time execution: " + (System.nanoTime() - startTime ));
                         }
                     });
         }
