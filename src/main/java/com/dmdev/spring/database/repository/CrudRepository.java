@@ -1,4 +1,4 @@
-package com.dmdev.spring.database.repositery;
+package com.dmdev.spring.database.repository;
 
 import java.util.Optional;
 

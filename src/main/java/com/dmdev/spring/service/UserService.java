@@ -1,9 +1,8 @@
 package com.dmdev.spring.service;
 
 import com.dmdev.spring.database.entity.Company;
-import com.dmdev.spring.database.repositery.CompanyRepository;
-import com.dmdev.spring.database.repositery.CrudRepository;
-import com.dmdev.spring.database.repositery.UserRepository;
+import com.dmdev.spring.database.repository.CrudRepository;
+import com.dmdev.spring.database.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service
