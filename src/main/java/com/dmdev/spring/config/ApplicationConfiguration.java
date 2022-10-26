@@ -3,7 +3,6 @@ package com.dmdev.spring.config;
 import com.dmdev.spring.database.pool.ConnectionPool;
 import com.dmdev.spring.database.repository.CrudRepository;
 import com.dmdev.spring.database.repository.UserRepository;
-import com.dmdev.web.config.WebConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
@@ -19,22 +18,23 @@ import org.springframework.stereotype.Component;
 // По умолчанию proxyBeanMethod - true, он создаёт прокси на основании configuration'а.
 // Без прокси мы каждый рза будем создавать новый бин
 @Configuration
-@PropertySource("classpath:application.properties")
-@ComponentScan(basePackages = "com.dmdev.spring",
-        // отключаем автоматические фильтры
-        useDefaultFilters = false,
-        includeFilters = {
-                // FilterType.ANNOTATION и так выбран по умолчанию
-                @Filter(type = FilterType.ANNOTATION, value = Component.class),
-                @Filter(type = FilterType.ASSIGNABLE_TYPE, value = CrudRepository.class),
-                @Filter(type = FilterType.REGEX, pattern = "com\\..+Repository")
-        })
+//@PropertySource("classpath:application.properties")
+//@ComponentScan(basePackages = "com.dmdev.spring",
+//        // отключаем автоматические фильтры
+//        useDefaultFilters = false,
+//        includeFilters = {
+//                // FilterType.ANNOTATION и так выбран по умолчанию
+//                @Filter(type = FilterType.ANNOTATION, value = Component.class),
+//                @Filter(type = FilterType.ASSIGNABLE_TYPE, value = CrudRepository.class),
+//                @Filter(type = FilterType.REGEX, pattern = "com\\..+Repository")
+//        })
 //@ImportResource("classpath:application.xml")
+
 // В аннотации @Import мы указываем другие configuration классы, которые мы хотим подключить в наше приложение.
 // Обычно там указываются те конфиги, которые сами автоматически не сканируются
 // например конфигурации SpringData, Spring Web.
 // Вся конфигурация от туда по сути будет вставлена сюда
-@Import(WebConfiguration.class)
+//@Import(WebConfiguration.class)
 public class ApplicationConfiguration {
 
         // для того чтобы ConnectionPool был бином и добавился в applicationContext
