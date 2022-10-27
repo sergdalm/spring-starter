@@ -7,40 +7,32 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapKeyColumn;
-import java.util.HashMap;
-import java.util.Map;
+import javax.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "name")
-@ToString(exclude = "locales")
+@ToString(exclude = "userChat")
 @Builder
 @Entity
-public class Company implements BaseEntity<Integer> {
+public class Chat implements BaseEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(nullable = false, unique = true)
     private String name;
 
     @Builder.Default
-    @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "company_locales",
-            joinColumns = @JoinColumn(name = "company_id"))
-    @MapKeyColumn(name = "lang")
-    @Column(name = "description")
-    private Map<String, String> locales = new HashMap<>();
+    @OneToMany(mappedBy = "chat")
+    private List<UserChat> userChat = new ArrayList<>();
 }

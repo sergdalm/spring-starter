@@ -22,11 +22,12 @@ db:
 
 spring:profiles:active: qa
 
+
 # префикс для логгирования
 logging:
   level:
 #    ключ с уровнем логгирования
-    root: WARN
+    root: INFO
 #    ключ для одного класса
 #    можно поставить не название класса, а название пакета
     com.dmdev.spring.database.pool.ConnectionPoolL: INFO
@@ -34,3 +35,16 @@ logging:
     name: dmdev.log
     path: /
 
+# автоматически будет использовать hikari pool
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties.hiberante:
+#       тут мы пишем те же настойки, что писали в hibernate xml
+      show_sql: true
+      format_sql: true
+#      hbm2ddl.auto: validate
