@@ -7,9 +7,12 @@ import com.dmdev.spring.database.repository.CrudRepository;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import javax.persistence.Entity;
 
 // это дб едиснтвенной аннотацией во всём проекте
 // теперь ComponentScan не нужен, он будет автоматически сканировать бины в пакете с этим файлом
@@ -19,6 +22,10 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 // в этом пакете будут искаться все классы, помеченные аннотацией @ConfigurationProperties
 @ConfigurationPropertiesScan
+
+// Если сущности Хибернейта леажт не в той же папке, а в другом месте
+// Внутри аннотации нужно указать путь где лежит пакет со всеми сущностями
+//@EntityScan
 public class ApplicationRunner {
     public static void main(String[] args) {
 //        String value = "hello";
