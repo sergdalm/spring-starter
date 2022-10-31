@@ -1,7 +1,7 @@
 package com.dmdev.spring.service;
 
 import com.dmdev.spring.database.entity.Company;
-import com.dmdev.spring.database.repository.CrudRepository;
+import com.dmdev.spring.database.repository.CompanyRepository;
 import com.dmdev.spring.database.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final CrudRepository<Integer, Company> companyRepository;
+    private final CompanyRepository companyRepository;
 
     public UserService(UserRepository userRepository,
-                       CrudRepository<Integer, Company> companyRepository) {
+                       CompanyRepository companyRepository) {
         this.userRepository = userRepository;
         this.companyRepository = companyRepository;
     }

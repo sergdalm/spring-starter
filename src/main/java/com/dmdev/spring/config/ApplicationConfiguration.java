@@ -1,7 +1,6 @@
 package com.dmdev.spring.config;
 
 import com.dmdev.spring.database.pool.ConnectionPool;
-import com.dmdev.spring.database.repository.CrudRepository;
 import com.dmdev.spring.database.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanDefinition;

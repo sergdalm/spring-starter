@@ -43,7 +43,7 @@ spring:
     password: postgres
     driver-class-name: org.postgresql.Driver
   jpa:
-    properties.hiberante:
+    properties.hibernate:
 #       тут мы пишем те же настойки, что писали в hibernate xml
       show_sql: true
       format_sql: true

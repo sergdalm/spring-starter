@@ -5,7 +5,7 @@ import com.dmdev.spring.bpp.Auditing;
 import com.dmdev.spring.bpp.Transaction;
 import com.dmdev.spring.database.entity.Company;
 import com.dmdev.spring.database.pool.ConnectionPool;
-import com.dmdev.spring.database.repository.CrudRepository;
+import com.dmdev.spring.database.repository.CompanyRepository;
 import com.dmdev.spring.dto.CompanyReadDto;
 import com.dmdev.spring.listener.entity.AccessType;
 import com.dmdev.spring.listener.entity.EntityEvent;
@@ -21,7 +21,7 @@ import java.util.Optional;
 
 public class CompanyService {
 
-    private final CrudRepository<Integer, Company> companyRepository;
+    private final CompanyRepository companyRepository;
     private final UserService userService;
     private final ApplicationEventPublisher eventPublisher;
 

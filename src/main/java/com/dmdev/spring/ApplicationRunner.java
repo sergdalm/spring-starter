@@ -3,7 +3,6 @@ package com.dmdev.spring;
 import com.dmdev.spring.config.ApplicationConfiguration;
 import com.dmdev.spring.config.DatabaseProperties;
 import com.dmdev.spring.database.pool.ConnectionPool;
-import com.dmdev.spring.database.repository.CrudRepository;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
