@@ -17,9 +17,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapKeyColumn;
+import javax.persistence.NamedQuery;
 import java.util.HashMap;
 import java.util.Map;
 
+// точна такая же аннотаци есть в пакете hibernate, но мы используем из пакета javax.persistence
+@NamedQuery(
+//        называя запрос нужно следовать шаблону: EntityName.MethodName
+        name = "Company.findByName",
+//        здесь используется hql
+//        :name - это название должно быть в качестве параметра в методе, иначе будет exception
+        // или можно в методе использовать аннотацию @Param
+        query = "select c from Company c where lower(c.name) = lower(:name2)"
+)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

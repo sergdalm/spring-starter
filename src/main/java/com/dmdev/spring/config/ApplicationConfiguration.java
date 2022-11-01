@@ -14,6 +14,8 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 // По умолчанию proxyBeanMethod - true, он создаёт прокси на основании configuration'а.
 // Без прокси мы каждый рза будем создавать новый бин
 @Configuration
@@ -43,34 +45,35 @@ public class ApplicationConfiguration {
         // потому что классы Configuration сканируются в первую очередь BeanFactoryPostProcessor'ом.
         // Если в скобочках указать id бина самим - это id и будет использоваться (иначе будет браться по названию метода)
         // Аннотация @Bean позволяет создавать бины на основание Java конфига
-        @Bean("pool2")
+//        @Bean("pool2")
         // можно контролировать scope, по умолчанию он singleton
-        @Scope(BeanDefinition.SCOPE_SINGLETON)
-        public ConnectionPool pool2(@Value("${db.username}") String username) {
-                return new ConnectionPool(username, 20);
-        }
+//        @Scope(BeanDefinition.SCOPE_SINGLETON)
+//        public ConnectionPool pool2(@Value("${db.username}") String username) {
+//                return new ConnectionPool(username, 20);
+//        }
 
-        @Bean
-        public ConnectionPool pool3() {
-                return new ConnectionPool("test-pool", 25);
-        }
+//        @Bean
+//        public ConnectionPool pool3() {
+//                return new ConnectionPool("test-pool", 25);
+//        }
 
-        @Bean
+//        @Bean
         // Мы можем тут заинжектить и другие бины, перечислив их в параметрах метода
         // Если есть несколько бинов одного и того же типа мы можем использовать Qualifier
         // или id на основании названия параметра
-        public UserRepository userRepository2(ConnectionPool pool2) {
-                return new UserRepository(pool2);
-        }
+//        public UserRepository userRepository2(ConnectionPool pool2) {
+//                return new UserRepository(pool2);
+//        }
 
-        @Bean
+//        @Bean
         // другой вариант заинжектить другой бин - вызвать метод в configuration классе
         // этот вариант не так часто используется, потому что неудобно передавать аргументы метода когда они есть.
         // Это будет работать только если proxyBeanMethods - true
-        public UserRepository userRepository3() {
-                final ConnectionPool connectionPool1 = pool3();
-                final ConnectionPool connectionPool2 = pool3();
-                final ConnectionPool connectionPool3 = pool3();
-                return new UserRepository(pool3());
-        }
+//        public UserRepository userRepository3() {
+//                final ConnectionPool connectionPool1 = pool3();
+//                final ConnectionPool connectionPool2 = pool3();
+//                final ConnectionPool connectionPool3 = pool3();
+//                return new UserRepository(pool3());
+//        }
+
 }
