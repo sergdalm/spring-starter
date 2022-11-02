@@ -1,17 +1,17 @@
 package com.dmdev.spring.integration.database.repository;
 
-import com.dmdev.spring.bpp.Transaction;
 import com.dmdev.spring.database.entity.Role;
 import com.dmdev.spring.database.entity.User;
 import com.dmdev.spring.database.repository.UserRepository;
+import com.dmdev.spring.dto.PersonalInfo;
+import com.dmdev.spring.dto.PersonalInfo2;
+import com.dmdev.spring.dto.UserFilter;
 import com.dmdev.spring.integration.annotation.IT;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -29,6 +29,32 @@ class UserRepositoryTest {
     private final UserRepository userRepository;
 
     @Test
+    void checkAuditing() {
+        final User ival = userRepository.findById(1L).get();
+        ival.setBirthDate(ival.getBirthDate().plusYears(1));
+        userRepository.flush();
+        System.out.println();
+    }
+
+    @Test
+    void checkCustomImplementation() {
+        UserFilter filter = new UserFilter(
+                null, "%ov%", LocalDate.now()
+        );
+        final List<User> users = userRepository.findAllByFilter(filter);
+        System.out.println(users);
+    }
+
+    @Test
+    void checkProjections() {
+        List<PersonalInfo> users = userRepository.findAllByCompanyId(36, PersonalInfo.class);
+        assertThat(users).hasSize(2);
+
+        List<PersonalInfo2> users2 = userRepository.findAllByCompanyId2(36);
+        assertThat(users2).hasSize(2);
+    }
+
+    @Test
     void checkPageable() {
         // Позволяет создавать limit и offset для запросов динамически, а также сортировка.
         // PageRequest это основная реализация Pageable
@@ -39,11 +65,11 @@ class UserRepositoryTest {
         Slice<User> slice = userRepository.findAllBy(pageable);
         System.out.println(slice);
         assertThat(slice).hasSize(2);
-        slice.forEach(user -> System.out.println(user.getId()));
+        slice.forEach(user -> System.out.println(user.getCompany().getName()));
 
         while (slice.hasNext()) {
             slice = userRepository.findAllBy(slice.nextPageable());
-            slice.forEach(user -> System.out.println(user.getId()));
+            slice.forEach(user -> System.out.println(user.getCompany().getName()));
         }
     }
 

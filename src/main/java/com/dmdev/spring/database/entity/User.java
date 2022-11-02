@@ -16,12 +16,23 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+//@NamedEntityGraph(
+//        // называем по паттерну: НазваниеСущности.названиеПоля(подтягиваемая ассоциация)
+//        name = "User.company",
+//        // Название поля в сущности User
+//        attributeNodes = @NamedAttributeNode("company")
+//)
+@NamedEntityGraph(
+        name = "User.company",
+        attributeNodes = @NamedAttributeNode("company"))
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,7 +41,7 @@ import java.util.List;
 @ToString(exclude = {"company", "userChats"})
 @Entity
 @Table(name = "users")
-public class User implements BaseEntity<Long> {
+public class User extends AuditingEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
