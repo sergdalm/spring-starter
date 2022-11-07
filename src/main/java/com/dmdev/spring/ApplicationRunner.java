@@ -41,6 +41,6 @@ public class ApplicationRunner {
 //        }
         // Это метод создаём application context
         ConfigurableApplicationContext context = SpringApplication.run(ApplicationRunner.class, args);
-        System.out.println(DatabaseProperties.class);
+//        System.out.println(DatabaseProperties.class);
     }
 }

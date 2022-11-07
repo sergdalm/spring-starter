@@ -37,6 +37,12 @@ logging:
 
 # автоматически будет использовать hikari pool
 spring:
+  mvc:
+    view:
+#      директория, где будут храниться jsp
+      prefix: WEB-INF/jsp/
+#      расширение файлов view
+      suffix: .jsp
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
