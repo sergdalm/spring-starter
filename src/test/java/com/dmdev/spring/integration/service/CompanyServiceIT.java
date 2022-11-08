@@ -56,7 +56,7 @@ public class CompanyServiceIT {
 
         assertTrue(actualResult.isPresent());
 
-        CompanyReadDto expectedResult = new CompanyReadDto(COMPANY_ID);
+        CompanyReadDto expectedResult = new CompanyReadDto(COMPANY_ID, null);
         actualResult.ifPresent(actual -> assertEquals(expectedResult, actual));
     }
 

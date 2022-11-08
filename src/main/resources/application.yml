@@ -43,6 +43,8 @@ spring:
       prefix: WEB-INF/jsp/
 #      расширение файлов view
       suffix: .jsp
+    format:
+      date: iso
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
@@ -53,4 +55,7 @@ spring:
 #       тут мы пишем те же настойки, что писали в hibernate xml
       show_sql: true
       format_sql: true
+#   по умолчанию open-in-view - true и транзакции открываются на уровне контроллеров
+#  - нам такого поведения не надо и мы отключаем
+    open-in-view: false
 #      hbm2ddl.auto: validate
