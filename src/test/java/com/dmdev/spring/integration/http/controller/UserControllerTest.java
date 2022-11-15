@@ -1,6 +1,7 @@
 package com.dmdev.spring.integration.http.controller;
 
 import com.dmdev.spring.dto.UserCreateEditDto;
+import com.dmdev.spring.integration.IntegrationTestBase;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RequiredArgsConstructor
 // Это специальный объект для того чтобы иммитировать http-запросы в приложение
 @AutoConfigureMockMvc
-public class UserControllerTest {
+public class UserControllerTest extends IntegrationTestBase {
 
     private final MockMvc mockMvc;
 

@@ -4,6 +4,7 @@ import com.dmdev.spring.database.entity.Role;
 import com.dmdev.spring.database.pool.ConnectionPool;
 import com.dmdev.spring.dto.UserCreateEditDto;
 import com.dmdev.spring.dto.UserReadDto;
+import com.dmdev.spring.integration.IntegrationTestBase;
 import com.dmdev.spring.integration.annotation.IT;
 import com.dmdev.spring.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@IT
 @RequiredArgsConstructor
 // эта аннотация будет помечать context как dirty
 // - контекст будет помечен как dirty и мы не сможем переиспользовать уже существующий,
@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 // по умолчанию - действует автоматический механизм определения dirty контекста
 // в идеале как можно реже делать его dirty
 //@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class UserServiceIT {
+public class UserServiceIT extends IntegrationTestBase {
 
     private static final Long USER_1 = 1L;
     private static final Integer COMPANY_1 = 1;
