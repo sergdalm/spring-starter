@@ -56,12 +56,16 @@ public class User extends AuditingEntity<Long> {
 
     private String lastname;
 
+    private String image;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
     // Не забывать LAZY!!!
     @ManyToOne(fetch = FetchType.LAZY)
     private Company company;
+
+
 
     @Builder.Default
     @OneToMany(mappedBy = "user")

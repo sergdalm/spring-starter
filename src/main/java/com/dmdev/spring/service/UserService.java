@@ -1,18 +1,34 @@
 package com.dmdev.spring.service;
 
 import com.dmdev.spring.database.entity.Company;
+import com.dmdev.spring.database.entity.User;
+import com.dmdev.spring.database.querydsl.QPredicates;
 import com.dmdev.spring.database.repository.CompanyRepository;
+import com.dmdev.spring.database.repository.CriteriaPredicate;
 import com.dmdev.spring.database.repository.UserRepository;
 import com.dmdev.spring.dto.UserCreateEditDto;
+import com.dmdev.spring.dto.UserFilter;
 import com.dmdev.spring.dto.UserReadDto;
 import com.dmdev.spring.mapper.UserCreateEditMapper;
 import com.dmdev.spring.mapper.UserReadMapper;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
+
+import static com.dmdev.spring.database.entity.QUser.user;
 
 @Service
 @AllArgsConstructor
@@ -28,11 +44,24 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserReadMapper userReadMapper;
     private final UserCreateEditMapper userCreateEditMapper;
+    private final ImageService imageService;
 
     public List<UserReadDto> findAll() {
         return userRepository.findAll().stream()
                 .map(userReadMapper::map)
                 .toList();
+    }
+
+    public Page<UserReadDto> findAll(UserFilter filter, Pageable pageable) {
+        var predicate = QPredicates.builder()
+                .add(filter.firstname(), user.firstname::containsIgnoreCase)
+                .add(filter.lastname(), user.lastname::containsIgnoreCase)
+                .add(filter.birthDate(), user.birthDate::before)
+                .build();
+
+        return userRepository.findAll(predicate,pageable)
+                .map(userReadMapper::map);
+
     }
 
     // Мы можем перегрузить метод findById и findAll и передавать дополнительным параметром
@@ -47,7 +76,10 @@ public class UserService {
     public UserReadDto create(UserCreateEditDto userDto) {
         // "специально делаем не ofNullable чтобы был fail fast принцип" -???
         return Optional.of(userDto)
-                .map(userCreateEditMapper::map)
+                .map(dto -> {
+                    uploadImage(userDto.getImage());
+                    return userCreateEditMapper.map(dto);
+                })
                 // В данном случае мы не делаем flush потому что нам нужен id сущности.
                 // Если id не автогенерируемый, то лучше делать saveAndFlush() чтобы
                 // сразу же отловить exception если он прозойдет в момент сохранения в БД
@@ -56,14 +88,31 @@ public class UserService {
                 .orElseThrow();
     }
 
+    public Optional<byte[]> findAvatar(Long id) {
+        return userRepository.findById(id)
+                .map(User::getImage)
+                .filter(StringUtils::hasText)
+                .flatMap(imageService::get);
+    }
+
     @Transactional
     public Optional<UserReadDto> update(Long id, UserCreateEditDto userDto) {
         return userRepository.findById(id)
-                .map(entity -> userCreateEditMapper.map(userDto, entity))
+                .map(entity -> {
+                    uploadImage(userDto.getImage());
+                    return userCreateEditMapper.map(userDto, entity);
+                })
                 // тут важно вызвать flush() потому что иначе мы можем отловить excpetion позже,
                 // а так мы сразу увидим проблему
                 .map(userRepository::saveAndFlush)
                 .map(userReadMapper::map);
+    }
+
+    @SneakyThrows
+    private void uploadImage(MultipartFile image) {
+        if(!image.isEmpty()) {
+            imageService.upload(image.getOriginalFilename(), image.getInputStream());
+        }
     }
 
     @Transactional

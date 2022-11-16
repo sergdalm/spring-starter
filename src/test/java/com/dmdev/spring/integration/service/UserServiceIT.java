@@ -46,7 +46,7 @@ public class UserServiceIT extends IntegrationTestBase {
             "Test",
             "Test",
             Role.ADMIN,
-            COMPANY_1
+            COMPANY_1, null
     );
 
     private final UserService userService;

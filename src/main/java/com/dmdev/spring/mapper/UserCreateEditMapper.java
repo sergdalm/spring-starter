@@ -6,8 +6,12 @@ import com.dmdev.spring.database.repository.CompanyRepository;
 import com.dmdev.spring.dto.UserCreateEditDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
+import java.util.function.Predicate;
+
+import static java.util.function.Predicate.not;
 
 @Component
 @RequiredArgsConstructor
@@ -38,6 +42,9 @@ public class UserCreateEditMapper implements Mapper<UserCreateEditDto, User> {
         // Если бы мы не передавали роль в dto, то устанавливали бы роль по умолчанию
         user.setRole(object.getRole());
         user.setCompany(getCompanyById(object.getCompanyId()));
+        Optional.ofNullable(object.getImage())
+                .filter(not(MultipartFile::isEmpty))
+                .ifPresent(image -> user.setImage(image.getOriginalFilename()));
     }
 
     private Company getCompanyById(Integer companyId) {

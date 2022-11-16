@@ -3,6 +3,7 @@ package com.dmdev.spring.config;
 import lombok.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.Map;
@@ -11,10 +12,13 @@ import java.util.Map;
 // Класс должен быть POJO (getters, setters)
 //@Value
 
-// Для того чтобы эта аннотация работала. нужно класс сделать бином
+// можно валидирующие аннотации ставить над dto, которые мы используем для конфигурации.
+// В таком случае если валидация не прошла - приложение просто не поднимется.
+@Validated
+
+// Для того чтобы эта аннотация работала, нужно класс сделать бином
 // Т.е. либо поставить @Component,
 // либо @ConfigurationPropertiesScan y ApplicationRunner
-//
 @ConfigurationProperties(prefix = "db")
 // чтобы можно было инициализировать через конструктор
 // Или можено сделать класс record'ом

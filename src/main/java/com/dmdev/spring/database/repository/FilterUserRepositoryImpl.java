@@ -21,23 +21,18 @@ public class FilterUserRepositoryImpl implements FilterUserRepository{
     // Динамическая реализация запроса - в зависимости от фильтра
     @Override
     public List<User> findAllByFilter(UserFilter filter) {
-        final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<User> criteria = cb.createQuery(User.class);
-        final Root<User> user = criteria.from(User.class);
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> criteria = cb.createQuery(User.class);
+        Root<User> user = criteria.from(User.class);
         criteria.select(user);
 
-        List<Predicate> predicates = new ArrayList<>();
-        if (filter.firstname() != null) {
-            predicates.add(cb.like(user.get("firstname"), filter.firstname()));
-        }
-        if (filter.lastname() != null) {
-            predicates.add(cb.like(user.get("lastname"), filter.lastname()));
-        }
-        if (filter.birthDate() != null) {
-            predicates.add(cb.lessThan(user.get("birthDate"), filter.birthDate()));
-        }
+        Predicate[] predicates = CriteriaPredicate.builder()
+                .add(filter.firstname(), obj -> cb.like(user.get("firstname"), obj))
+                .add(filter.lastname(), obj -> cb.like(user.get("lastname"), obj))
+                .add(filter.birthDate(), obj -> cb.lessThan(user.get("birthDate"), obj))
+                .build();
 
-        criteria.where(predicates.toArray(Predicate[]::new));
+        criteria.where(predicates);
 
         return entityManager.createQuery(criteria).getResultList();
     }

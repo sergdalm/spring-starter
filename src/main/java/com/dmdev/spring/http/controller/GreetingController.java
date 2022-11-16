@@ -66,7 +66,7 @@ public class GreetingController {
 //        modelAndView.addObject("user", new UserReadDto(1L, "Ivan"));
         System.out.println();
 
-        model.addAttribute("user", new UserReadDto(1L, "Ivan", null, null, null, null, null));
+        model.addAttribute("user", new UserReadDto(1L, "Ivan", null, null, null, null, null, null));
 
         return "greeting/hello";
     }
