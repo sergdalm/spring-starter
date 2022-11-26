@@ -1,8 +1,10 @@
 package com.dmdev.spring.integration.service;
 
 import com.dmdev.spring.database.entity.Role;
+import com.dmdev.spring.database.entity.User;
 import com.dmdev.spring.database.pool.ConnectionPool;
 import com.dmdev.spring.dto.UserCreateEditDto;
+import com.dmdev.spring.dto.UserFilter;
 import com.dmdev.spring.dto.UserReadDto;
 import com.dmdev.spring.integration.IntegrationTestBase;
 import com.dmdev.spring.integration.annotation.IT;
@@ -15,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.boot.test.mock.mockito.SpyBeans;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.time.LocalDate;
@@ -42,14 +45,24 @@ public class UserServiceIT extends IntegrationTestBase {
     private static final Integer COMPANY_1 = 1;
     private static final UserCreateEditDto userDto = new UserCreateEditDto(
             "test@gmail.com",
+            "test",
             LocalDate.now(),
             "Test",
             "Test",
             Role.ADMIN,
-            COMPANY_1, null
+            COMPANY_1,
+            new MockMultipartFile("test", new byte[0])
     );
 
     private final UserService userService;
+
+
+    @Test
+    void findAllByFilter() {
+        UserFilter userFilter = new UserFilter(null, null, null, List.of(Role.ADMIN));
+        final Iterable<User> result = userService.findAll(userFilter);
+        assertThat(result).hasSize(2);
+    }
 
     @Test
     void findAll() {

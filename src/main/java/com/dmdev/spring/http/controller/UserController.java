@@ -15,6 +15,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -49,13 +54,16 @@ public class UserController {
     // Методы в контроллере именуем как и раньше - с глаголами
     public String findAll(Model model, UserFilter filter, Pageable pageable) {
         final Page<UserReadDto> page = userService.findAll(filter, pageable);
-        model.addAttribute("users",  PageResponse.of(page));
-        model.addAttribute("filter",  filter);
+        model.addAttribute("users", PageResponse.of(page));
+        model.addAttribute("filter", filter);
         return "users/users";
     }
 
     @GetMapping("/{id}")
-    public String findById(@PathVariable("id") Long id, Model model) {
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public String findById(@PathVariable("id") Long id,
+                           Model model,
+                           @AuthenticationPrincipal UserDetails authenticationPrincipal) {
         // Всегда когда идёт обращение по url, который не существует, надо пробрасывать NOT_FOUND exception
         return userService.findById(id)
                 .map(user -> {
@@ -108,7 +116,8 @@ public class UserController {
 
             return "redirect:/users/registration";
         }
-        return "redirect:/users/" + userService.create(user).getId();
+        userService.create(user);
+        return "redirect:/login";
     }
 
     // Мы не можем из нашей формы отправлять put запрос, поэтому тут мы нарушим best practice по API и добавим "/update"
@@ -121,7 +130,7 @@ public class UserController {
         // Спринг хранит все PathVariable в отдельной map по ключу и значению,
         // поэтому в redirect мы сразу можем использовать PathVariable и не делать конкатенацию
         return userService.update(id, user)
-                .map(it -> "redirect:users/{id}")
+                .map(it -> "redirect:/users/{id}")
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 

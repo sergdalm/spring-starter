@@ -16,6 +16,7 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.LockModeType;
@@ -96,4 +97,6 @@ public interface UserRepository extends JpaRepository<User, Long>, FilterUserRep
     @Query(nativeQuery = true,
     value = "SELECT firstname, lastname, birth_date birthDate FROM users WHERE company_id = :companyId")
     List<PersonalInfo2> findAllByCompanyId2(Integer companyId);
+
+    Optional<User> findByUsername(String username);
 }

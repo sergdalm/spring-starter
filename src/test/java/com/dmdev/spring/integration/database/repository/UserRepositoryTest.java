@@ -39,7 +39,7 @@ class UserRepositoryTest {
     @Test
     void checkCustomImplementation() {
         UserFilter filter = new UserFilter(
-                null, "%ov%", LocalDate.now()
+                null, "%ov%", LocalDate.now(), null
         );
         final List<User> users = userRepository.findAllByFilter(filter);
         System.out.println(users);

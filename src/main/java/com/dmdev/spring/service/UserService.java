@@ -15,6 +15,9 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -25,6 +28,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.File;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +44,7 @@ import static com.dmdev.spring.database.entity.QUser.user;
 // - он не будет делать flush сессии потому что нет никаких изменений),
 // и в методах, где нужны изменения отдельно указывать без флага readOnly
 @Transactional(readOnly = true)
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final UserReadMapper userReadMapper;
@@ -57,12 +62,24 @@ public class UserService {
                 .add(filter.firstname(), user.firstname::containsIgnoreCase)
                 .add(filter.lastname(), user.lastname::containsIgnoreCase)
                 .add(filter.birthDate(), user.birthDate::before)
+                .add(filter.roles(), user.role::in)
                 .build();
 
         return userRepository.findAll(predicate,pageable)
                 .map(userReadMapper::map);
-
     }
+
+    public Iterable<User> findAll(UserFilter filter) {
+        var predicate = QPredicates.builder()
+                .add(filter.firstname(), user.firstname::containsIgnoreCase)
+                .add(filter.lastname(), user.lastname::containsIgnoreCase)
+                .add(filter.birthDate(), user.birthDate::before)
+                .add(filter.roles(), user.role::in)
+                .build();
+
+        return userRepository.findAll(predicate);
+    }
+
 
     // Мы можем перегрузить метод findById и findAll и передавать дополнительным параметром
     // mapper и в таком случае использовать именно его, а по умолчанию использовать userReadMapper
@@ -127,4 +144,14 @@ public class UserService {
                 .orElse(false);
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username)
+                .map(user -> new org.springframework.security.core.userdetails.User(
+                        user.getUsername(),
+                        user.getPassword(),
+                        Collections.singleton(user.getRole())
+                ))
+                .orElseThrow(() -> new UsernameNotFoundException("Failed to retrieve user " + username));
+    }
 }

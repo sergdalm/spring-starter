@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
@@ -23,6 +24,9 @@ public class UserCreateEditDto {
 
     @Email
     String username;
+
+    @NotBlank(groups = CreateAction.class)
+    String rowPassword;
 
     LocalDate birthDate;
 

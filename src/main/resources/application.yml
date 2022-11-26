@@ -59,3 +59,13 @@ spring:
 #  - нам такого поведения не надо и мы отключаем
     open-in-view: false
 #      hbm2ddl.auto: validate
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 173417888033-2lq4v5h4nh9bhn5jvoi62e3lnclij393.apps.googleusercontent.com
+            clientSecret: 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
+            redirectUri: http://localhost:8080/login/oauth2/code/google
+#            openid и так будет по умолчанию (???)
+            scope: openid,email,profile

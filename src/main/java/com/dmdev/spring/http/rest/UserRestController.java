@@ -81,6 +81,17 @@ public class UserRestController {
                 .orElseGet(notFound()::build);
     }
 
+//    @GetMapping("/{id}/download")
+//    public ResponseEntity<?> downloadAvatar(@PathVariable("id") Long id) {
+//        return userService.findAvatar(id)
+//                // Вместо exception  возвращаем ResponseEntity
+//                .map(content -> ResponseEntity.ok()
+//                        .contentType(MediaType.APPLICATION_OCTET_STREAM)
+//                        .contentLength(content.length)
+//                        .body(content))
+//                .orElseGet(notFound()::build);
+//    }
+
     @GetMapping("/{id}")
     public UserReadDto findById(@PathVariable("id") Long id) {
         // Всегда когда идёт обращение по url, который не существует, надо пробрасывать NOT_FOUND exception
